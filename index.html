@@ -1,0 +1,80 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>World Clock – What’s the time here?</title>
+        <meta name="description" content="Check current local time in your city and other major cities across the world with this simple world clock.">
+        <meta name="keywords" content="world clock,current time,what time is it here,time zones">
+        <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+            h1 { color: #333333; }
+            form { margin-top: 1rem; }
+            label { display: block; margin: 0.5rem 0 0.2rem; font-weight: bold; }
+            input, select { width: 100%; padding: 0.5rem; margin-bottom: 1rem; box-sizing: border-box; }
+            button { padding: 0.5rem 1rem; background-color: #0066cc; color: white; border: none; cursor: pointer; }
+            button:hover { background-color: #004d99; }
+            .result { margin-top: 1rem; background: #f5f5f5; padding: 1rem; border: 1px solid #dddddd; }
+            footer { margin-top: 2rem; font-size: 0.9rem; color: #666666; }
+        </style>
+    </head>
+    <body>
+    
+        <h1>World Clock – What’s the Time Here?</h1>
+        <p>This tool shows the current time in your browser’s time zone and selected cities around the globe. Refresh the page for the latest time. Knowing the time difference helps you plan calls and travel more effectively.</p>
+        <label for="wcCities">Choose cities (comma separated)</label>
+        <input type="text" id="wcCities" placeholder="London, New York, Tokyo">
+        <button onclick="showWorldTimes()">Show Times</button>
+        <div id="wcResult" class="result" style="display:none;"></div>
+        <h2>Understanding time zones</h2>
+        <p>The world is divided into 24 primary time zones, each roughly 15 degrees of longitude apart. Some regions observe Daylight Saving Time (DST), moving the clock forward or back by one hour seasonally. When scheduling events:</p>
+        <ul>
+            <li>Check whether the destination city is observing DST.</li>
+            <li>Remember that not all time zones offset by whole hours (for example, India is UTC+5:30).</li>
+            <li>Use Coordinated Universal Time (UTC) as a reference when in doubt.</li>
+        </ul>
+    <script>
+
+        const worldTimeZones = {
+            'London': 'Europe/London',
+            'New York': 'America/New_York',
+            'Tokyo': 'Asia/Tokyo',
+            'Sydney': 'Australia/Sydney',
+            'Los Angeles': 'America/Los_Angeles',
+            'Paris': 'Europe/Paris',
+            'Singapore': 'Asia/Singapore',
+            'Dubai': 'Asia/Dubai',
+            'Beijing': 'Asia/Shanghai',
+            'Mumbai': 'Asia/Kolkata'
+        };
+        function showWorldTimes() {
+            const input = document.getElementById('wcCities').value;
+            const cities = input.split(',').map(c => c.trim()).filter(c => c.length > 0);
+            const now = new Date();
+            let output = `<strong>Local Time (${Intl.DateTimeFormat().resolvedOptions().timeZone}):</strong> ${now.toLocaleString('en-GB')}<br>`;
+            if (cities.length > 0) {
+                output += '<ul>';
+                cities.forEach(city => {
+                    const tz = worldTimeZones[city] || 'UTC';
+                    try {
+                        const timeStr = now.toLocaleString('en-GB', { timeZone: tz });
+                        output += `<li>${city}: ${timeStr}</li>`;
+                    } catch (e) {
+                        output += `<li>${city}: Error retrieving time</li>`;
+                    }
+                });
+                output += '</ul>';
+            }
+            const resultDiv = document.getElementById('wcResult');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = output;
+        }
+    
+</script>
+        <footer>
+            <p>Disclaimer: This tool is for informational purposes only. Please verify any calculations with official sources before making financial or health decisions.</p>
+        </footer>
+    </body>
+    </html>
+    
